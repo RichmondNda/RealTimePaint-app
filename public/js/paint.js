@@ -78,8 +78,11 @@ function init() {
     });
 
     $('#undo-btn').click(function () {
-        strokes.pop();
-        paint();
+        
+        socket.emit('undo');
+        
+        // strokes.pop();
+        // paint();
     });
 
    $('#clear-btn').click(function () {
@@ -128,7 +131,7 @@ function mouseEvent (e) {
     socket.on('painter', (currentStroke) => {
 
         strokes.push(currentStroke);
-
+        paint();
      });
 
 
@@ -136,4 +139,9 @@ function mouseEvent (e) {
         strokes = [];
         paint();
     });
+
+    socket.on('undo', () => {
+        strokes.pop();
+        paint();
+    })
 
