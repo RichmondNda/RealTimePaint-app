@@ -1,0 +1,16 @@
+{
+  "name": "realtimepaint",
+  "version": "1.0.0",
+  "description": "Premmiere application de dession en ligne avec plusieurs utilisateurs connecter",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "REGIS N'DA",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.3.2"
+  }
+}
