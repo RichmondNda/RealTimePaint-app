@@ -1,84 +1,86 @@
-   // public/js/paint.js
-    
-   var socket, canvas, ctx,
-   brush = {
-       x: 0,
-       y: 0,
-       color: '#000000',
-       size: 10,
-       down: false,
-   },
-   strokes = [],
-   currentStroke = null;
 
-function paint () {
-   ctx.clearRect(0, 0, canvas.width(), canvas.height());
-   ctx.lineCap = 'rectangleMove';
-   for (var i = 0; i < strokes.length; i++) {
-       var s = strokes[i];
-       ctx.strokeStyle = s.color;
-       ctx.lineWidth = s.size;
-       ctx.beginPath();
-       ctx.moveTo(s.points[0].x, s.points[0].y);
-       for (var j = 0; j < s.points.length; j++) {
-           var p = s.points[j];
-           ctx.lineTo(p.x, p.y);
-       }
-       ctx.stroke();
-   }
+// public/js/paint.js
+
+var socket, canvas, ctx,
+    brush = {
+        x: 0,
+        y: 0,
+        color: '#000000',
+        size: 10,
+        down: false,
+    },
+    strokes = [],
+    currentStroke = null;
+
+function paint() {
+    ctx.clearRect(0, 0, canvas.width(), canvas.height());
+    ctx.lineCap = 'round';
+    for (var i = 0; i < strokes.length; i++) {
+        var s = strokes[i];
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = s.size;
+        ctx.beginPath();
+        ctx.moveTo(s.points[0].x, s.points[0].y);
+        for (var j = 0; j < s.points.length; j++) {
+            var p = s.points[j];
+            ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+    }
+
 }
 
 socket = io.connect("http://localhost:3000/");
 
-function init () {
+function init() {
 
-   canvas = $('#paint');
-   canvas.attr({
-       width: window.innerWidth,
-       height: window.innerHeight,
-   });
-   ctx = canvas[0].getContext('2d');
+    canvas = $('#paint');
+    canvas.attr({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+    ctx = canvas[0].getContext('2d');
 
-//    function mouseEvent (e) {
-//        //alert("test")
-//        brush.x = e.pageX;
-//        brush.y = e.pageY;
+    //    function mouseEvent (e) {
+    //        //alert("test")
+    //        brush.x = e.pageX;
+    //        brush.y = e.pageY;
 
-//        currentStroke.points.push({
-//            x: brush.x,
-//            y: brush.y,
-//        });
+    //        currentStroke.points.push({
+    //            x: brush.x,
+    //            y: brush.y,
+    //        });
 
-//        paint();
-//    }
+    //        paint();
+    //    }
 
-   canvas.mousedown(function (e) {
-       brush.down = true;
+    canvas.mousedown(function (e) {
+        brush.down = true;
 
-       currentStroke = {
-           color: brush.color,
-           size: brush.size,
-           points: [],
-       };
+        currentStroke = {
+            color: brush.color,
+            size: brush.size,
+            points: [],
+        };
 
-       strokes.push(currentStroke);
+        strokes.push(currentStroke);
 
-       mouseEvent(e);
-   }).mouseup(function (e) {
-       brush.down = false;
+        mouseEvent(e);
+    }).mouseup(function (e) {
+        brush.down = false;
 
-       mouseEvent(e);
+        mouseEvent(e);
 
-       currentStroke = null;
-   }).mousemove(function (e) {
-       if (brush.down)
-           mouseEvent(e);
-   });
+        currentStroke = null;
+    }).mousemove(function (e) {
+        if (brush.down)
+            mouseEvent(e);
+    });
 
-   $('#undo-btn').click(function () {
-       strokes.pop();
-       paint();
-   });
+    $('#undo-btn').click(function () {
+        strokes.pop();
+        paint();
+    });
 
    $('#clear-btn').click(function () {
        
@@ -88,21 +90,21 @@ function init () {
 
    });
 
-   $('#color-picker').on('input', function () {
-       brush.color = this.value;
-   });
 
-   $('#brush-size').on('input', function () {
-       brush.size = this.value;
-   });
+    $('#color-picker').on('input', function () {
+        brush.color = this.value;
+    });
+
+    $('#brush-size').on('input', function () {
+        brush.size = this.value;
+    });
 }
 
 $(init);
 
 
 
-
-    
+  
 function mouseEvent (e) {
   
     brush.x = e.pageX;
@@ -118,30 +120,15 @@ function mouseEvent (e) {
         y: brush.y
     }
 
-    //socket.emit('mouse', data);
-
     socket.emit('mouse', currentStroke);
 
     paint();
 }
 
-socket.on('painter', (currentStroke) => {
-    // console.log(data)
-    //     currentStroke = {
-    //         color: brush.color,
-    //         size: brush.size,
-    //         points: [],
-    // };
+    socket.on('painter', (currentStroke) => {
 
-    strokes.push(currentStroke);
+        strokes.push(currentStroke);
 
-    // currentStroke.points.push({
-    //     x: data.x,
-    //     y: data.y,
-    // });
-
-    paint();
-    
      });
 
 
@@ -149,3 +136,4 @@ socket.on('painter', (currentStroke) => {
         strokes = [];
         paint();
     });
+
