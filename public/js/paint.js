@@ -13,7 +13,7 @@
 
 function paint () {
    ctx.clearRect(0, 0, canvas.width(), canvas.height());
-   ctx.lineCap = 'round';
+   ctx.lineCap = 'rectangleMove';
    for (var i = 0; i < strokes.length; i++) {
        var s = strokes[i];
        ctx.strokeStyle = s.color;
@@ -28,6 +28,7 @@ function paint () {
    }
 }
 
+socket = io.connect("http://localhost:3000/");
 
 function init () {
 
@@ -80,8 +81,11 @@ function init () {
    });
 
    $('#clear-btn').click(function () {
-       strokes = [];
-       paint();
+       
+       socket.emit('clear');
+        //    strokes = [];
+        //    paint();
+
    });
 
    $('#color-picker').on('input', function () {
@@ -97,7 +101,7 @@ $(init);
 
 
 
-socket = io.connect("http://localhost:3000/");
+
     
 function mouseEvent (e) {
   
@@ -114,26 +118,34 @@ function mouseEvent (e) {
         y: brush.y
     }
 
-    socket.emit('mouse', data);
+    //socket.emit('mouse', data);
+
+    socket.emit('mouse', currentStroke);
 
     paint();
 }
 
-socket.on('painter', (data) => {
-    console.log(data)
-        currentStroke = {
-            color: brush.color,
-            size: brush.size,
-            points: [],
-    };
+socket.on('painter', (currentStroke) => {
+    // console.log(data)
+    //     currentStroke = {
+    //         color: brush.color,
+    //         size: brush.size,
+    //         points: [],
+    // };
 
     strokes.push(currentStroke);
 
-    currentStroke.points.push({
-        x: data.x,
-        y: data.y,
-    });
+    // currentStroke.points.push({
+    //     x: data.x,
+    //     y: data.y,
+    // });
 
     paint();
     
      });
+
+
+    socket.on('clear', ()=> {
+        strokes = [];
+        paint();
+    });

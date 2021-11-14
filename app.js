@@ -28,6 +28,11 @@ const io = require("socket.io")(server)
             
         });
 
+        socket.on('clear', () => {
+            socket.broadcast.emit('clear');
+            socket.emit('clear');
+        })
+
     })
 
     
