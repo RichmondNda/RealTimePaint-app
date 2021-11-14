@@ -24,7 +24,6 @@ const io = require("socket.io")(server)
         console.log("client connecter")
         
         socket.on('mouse', (data) => {
-            //console.log(data)
             socket.broadcast.emit('painter', data);
             
         });
