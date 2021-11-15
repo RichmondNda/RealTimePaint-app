@@ -34,8 +34,9 @@ const io = require("socket.io")(server)
         });
 
         socket.on('undo', () => {
-            socket.broadcast.emit('undo');
             socket.emit('undo');
+            socket.broadcast.emit('undo');
+           
         })
 
     })

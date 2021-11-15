@@ -1,5 +1,5 @@
 // public/js/paint.js
-socket = io.connect("http://localhost:3001/");
+socket = io.connect("http://localhost:3000/");
 
 
 var socket, canvas, ctx,
@@ -64,11 +64,10 @@ function init() {
     });
 
     $('#undo-btn').click(function () {
-        
+        //strokes.pop();
+        //paint();
         socket.emit('undo');
-        
-        // strokes.pop();
-        // paint();
+
     });
 
     $('#clear-btn').click(function () {
@@ -122,10 +121,10 @@ function mouseEvent(e) {
     socket.on('undo', () => {
         strokes.pop();
         paint();
-    })
+    });
 
 
-socket.on('clear', () => {
-    strokes = [];
-    paint();
-})
+    socket.on('clear', () => {
+        strokes = [];
+        paint();
+    });
